@@ -2046,3 +2046,279 @@ div[data-testid="stRadio"] div[role="radiogroup"] label {
 }
 </style>
 """)
+
+
+
+# ---------------- Final mobile-responsive layout overrides ----------------
+# These rules are intentionally placed last so they override earlier desktop-first
+# styles without changing RailConnect's existing search, availability, status or PNR logic.
+st.html("""
+<style>
+/* Prevent page-level horizontal overflow on narrow screens. */
+html, body, .stApp, [data-testid="stAppViewContainer"] {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+}
+.block-container {
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+}
+.stMarkdown, [data-testid="stVerticalBlock"], [data-testid="stHorizontalBlock"] {
+    min-width: 0 !important;
+}
+
+/* Keep the header compact and allow the help link to wrap on smaller devices. */
+.navbar {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    gap: 12px !important;
+}
+.brand { min-width: 0 !important; }
+.brand-name { overflow-wrap: anywhere !important; }
+.nav-right { min-width: 0 !important; flex-wrap: wrap !important; justify-content: flex-end !important; }
+.nav-right span, .nav-right a { text-align: center !important; }
+
+/* Hero typography and image scale with the available viewport. */
+.hero {
+    box-sizing: border-box !important;
+    width: 100% !important;
+}
+.hero-copy { min-width: 0 !important; }
+.hero h1 { overflow-wrap: anywhere !important; }
+.hero p { overflow-wrap: anywhere !important; }
+
+/* Result cards must shrink instead of forcing the page wider than the screen. */
+.train-card {
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+}
+.train-card > div { min-width: 0 !important; }
+.train-name-line, .station, .date-small, .route-tag {
+    overflow-wrap: anywhere !important;
+}
+.train-action { min-width: 0 !important; }
+.leg-route > div { min-width: 0 !important; }
+.transfer, .transfer-item, .results-summary, .helper, .pnr-hero,
+.pnr-train-banner, .pnr-passenger-card, .pnr-help-note {
+    box-sizing: border-box !important;
+    max-width: 100% !important;
+    overflow-wrap: anywhere !important;
+}
+.pnr-route-box { min-width: 0 !important; }
+.pnr-route-box > div { min-width: 0 !important; }
+.pnr-route-station { overflow-wrap: anywhere !important; }
+
+/* Form controls and Streamlit columns should fit the phone width. */
+[data-testid="stSelectbox"], [data-testid="stDateInput"],
+[data-testid="stTextInput"], [data-testid="stNumberInput"],
+[data-testid="stForm"], [data-testid="stFormSubmitButton"] {
+    max-width: 100% !important;
+    min-width: 0 !important;
+}
+[data-testid="stFormSubmitButton"] button { width: 100% !important; }
+[data-testid="stHorizontalBlock"] { gap: 0.65rem !important; }
+[data-testid="stDataFrame"], [data-testid="stTable"] {
+    max-width: 100% !important;
+}
+
+/* Navigation tabs: allow horizontal scrolling rather than squeezing labels tiny. */
+div[data-testid="stRadio"] {
+    max-width: 100% !important;
+    min-width: 0 !important;
+}
+div[data-testid="stRadio"] > div[role="radiogroup"] {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: thin !important;
+}
+div[data-testid="stRadio"] div[role="radiogroup"] label {
+    flex: 0 0 auto !important;
+    min-width: max-content !important;
+    white-space: nowrap !important;
+}
+
+@media (max-width: 720px) {
+    .block-container {
+        width: calc(100% - 20px) !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        padding-top: 0 !important;
+    }
+    .advisory {
+        padding: 8px 12px !important;
+        font-size: 10px !important;
+        line-height: 1.5 !important;
+        flex-wrap: wrap !important;
+    }
+    .navbar {
+        align-items: flex-start !important;
+        flex-direction: column !important;
+        padding: 14px 15px !important;
+        min-height: 0 !important;
+        border-radius: 0 0 16px 16px !important;
+    }
+    .brand { gap: 10px !important; }
+    .brand-mark {
+        width: 40px !important;
+        height: 40px !important;
+        flex-basis: 40px !important;
+    }
+    .brand-name { font-size: 20px !important; }
+    .brand-sub { font-size: 8px !important; letter-spacing: 1.3px !important; }
+    .nav-right {
+        width: 100% !important;
+        justify-content: flex-start !important;
+        font-size: 10px !important;
+        gap: 6px !important;
+    }
+    .nav-right span, .nav-right a { padding: 6px 9px !important; }
+
+    .hero {
+        min-height: 0 !important;
+        padding: 32px 20px 26px !important;
+        border-radius: 0 0 20px 20px !important;
+    }
+    .hero-image {
+        width: 100% !important;
+        height: 100% !important;
+        opacity: .13 !important;
+        object-position: center !important;
+        mask-image: none !important;
+    }
+    .hero-copy { max-width: 100% !important; }
+    .hero-kicker {
+        max-width: 100% !important;
+        font-size: 10px !important;
+        letter-spacing: 1px !important;
+        margin-bottom: 12px !important;
+    }
+    .hero h1 {
+        font-size: clamp(32px, 9vw, 46px) !important;
+        line-height: 1.08 !important;
+        letter-spacing: -1.3px !important;
+        margin-bottom: 13px !important;
+    }
+    .hero p { font-size: 13px !important; line-height: 1.65 !important; }
+    .hero-note {
+        display: inline-block !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        font-size: 10px !important;
+        line-height: 1.5 !important;
+    }
+
+    div[data-testid="stRadio"] {
+        width: 100% !important;
+        margin: 12px 0 18px !important;
+        padding: 0 !important;
+    }
+    div[data-testid="stRadio"] > div[role="radiogroup"] {
+        justify-content: flex-start !important;
+        gap: 5px !important;
+        padding: 5px !important;
+    }
+    div[data-testid="stRadio"] div[role="radiogroup"] label {
+        padding: 9px 11px !important;
+        font-size: 11px !important;
+    }
+
+    .section-heading { font-size: 22px !important; line-height: 1.3 !important; }
+    .section-subtitle { font-size: 12px !important; }
+    div[data-testid="stVerticalBlockBorderWrapper"]:has([data-testid="stDateInput"]) {
+        padding: 15px !important;
+        border-radius: 15px !important;
+    }
+    [data-testid="stHorizontalBlock"] { flex-wrap: wrap !important; }
+    [data-testid="stHorizontalBlock"] > [data-testid="column"] {
+        min-width: min(100%, 145px) !important;
+    }
+
+    .train-card {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+        gap: 12px !important;
+        padding: 14px !important;
+        border-radius: 15px !important;
+    }
+    .train-card > div:nth-child(1) { grid-column: 1 / -1 !important; }
+    .train-card > div:nth-child(2) { grid-column: 1 !important; }
+    .train-card > div:nth-child(3) {
+        grid-column: 1 / -1 !important;
+        grid-row: auto !important;
+        padding: 3px 8px !important;
+    }
+    .train-card > div:nth-child(4) { grid-column: 2 !important; }
+    .train-card > div:nth-child(5) { grid-column: 1 / -1 !important; }
+    .time { font-size: 22px !important; }
+    .station { font-size: 11px !important; }
+    .date-small { font-size: 13px !important; }
+    .duration { font-size: 13px !important; }
+    .distance-value { font-size: 12px !important; }
+    .train-action {
+        border-left: 0 !important;
+        border-top: 1px solid #dce3f2 !important;
+        padding: 10px 0 0 !important;
+    }
+    .day-row { gap: 5px !important; }
+    .day-circle { width: 25px !important; height: 25px !important; }
+
+    .leg-route {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 12px !important;
+        padding: 14px !important;
+    }
+    .leg-end.arrival { text-align: left !important; }
+    .leg-track { grid-row: auto !important; padding: 0 8px !important; }
+    .leg-time { font-size: 21px !important; }
+    .transfer { padding: 16px !important; }
+    .transfer-grid { grid-template-columns: minmax(0, 1fr) !important; }
+    .transfer-item { min-height: 0 !important; padding: 13px !important; }
+
+    .pnr-hero { padding: 20px 17px !important; }
+    .pnr-route-box {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 14px !important;
+        min-height: 0 !important;
+        padding: 15px !important;
+    }
+    .pnr-route-box > div:first-child,
+    .pnr-route-box > div:last-child {
+        grid-column: 1 !important;
+        grid-row: auto !important;
+        padding: 0 !important;
+        text-align: left !important;
+    }
+    .pnr-route-middle {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        transform: none !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        grid-row: auto !important;
+        text-align: left !important;
+    }
+    .pnr-route-station { font-size: 15px !important; }
+    .pnr-route-line { margin: 10px 4px !important; }
+    .pnr-train-banner { padding: 16px !important; }
+    .pnr-status-pill { font-size: 15px !important; padding: 8px 12px !important; }
+    .helper { padding: 17px !important; margin-top: 22px !important; }
+    .footer { line-height: 1.6 !important; padding: 18px 8px 5px !important; }
+}
+
+@media (max-width: 400px) {
+    .block-container { width: calc(100% - 16px) !important; }
+    .hero { padding: 27px 16px 23px !important; }
+    .hero h1 { font-size: 31px !important; }
+    .hero-kicker { letter-spacing: .7px !important; }
+    .nav-right span, .nav-right a { padding: 6px 8px !important; }
+    .train-card { padding: 12px !important; gap: 10px !important; }
+    .time { font-size: 20px !important; }
+    .station { font-size: 10px !important; }
+    .date-small { font-size: 12px !important; }
+}
+</style>
+""")
