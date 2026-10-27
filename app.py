@@ -7,7 +7,7 @@ import os
 import re
 import sys
 import subprocess
-
+from pathlib import Path
 import requests
 
 import streamlit as st
@@ -37,7 +37,7 @@ st.set_page_config(
 )
 
 PROJECT_DIR = Path(__file__).resolve().parent
-IMAGE_NAME = "Modern Indian Railways EMU in Green Corridor.png"
+IMAGE_NAME = "vande_bharat.png"
 LOGO_NAME = "Logo.png"
 LOGO_CANDIDATES = [
     PROJECT_DIR / "assets" / LOGO_NAME,
@@ -45,12 +45,31 @@ LOGO_CANDIDATES = [
     Path(r"C:\Users\par30\OneDrive\Desktop\Project_New\Rail_Connect\railway-route-finder\assets\Logo.png"),
 ]
 
+# Resolve the hero image relative to this app, which works both locally and
+# on Streamlit Community Cloud. Do not rely on a personal Windows-only path.
 IMAGE_CANDIDATES = [
     PROJECT_DIR / "assets" / IMAGE_NAME,
     PROJECT_DIR / IMAGE_NAME,
-    Path.home() / "Downloads" / IMAGE_NAME,
-    Path(r"C:\Users\par30\Downloads") / IMAGE_NAME,
+    PROJECT_DIR / "assets" / "Modern Indian Railways EMU in Green Corridor.png",
+    PROJECT_DIR / "Modern Indian Railways EMU in Green Corridor.png",
 ]
+
+# If the filename's capitalization differs in the deployed Linux environment,
+# also try a case-insensitive match inside the assets directory.
+ASSETS_DIR = PROJECT_DIR / "assets"
+if ASSETS_DIR.is_dir():
+    try:
+        for asset_path in ASSETS_DIR.iterdir():
+            if asset_path.is_file() and asset_path.name.casefold() == IMAGE_NAME.casefold():
+                IMAGE_CANDIDATES.insert(0, asset_path)
+                break
+        else:
+            for asset_path in ASSETS_DIR.iterdir():
+                if asset_path.is_file() and asset_path.suffix.casefold() in {".png", ".jpg", ".jpeg", ".webp"} and "vande" in asset_path.name.casefold():
+                    IMAGE_CANDIDATES.insert(0, asset_path)
+                    break
+    except OSError:
+        pass
 
 
 # ----------------------------- Data -----------------------------
@@ -360,7 +379,11 @@ st.html(
 """
 )
 if not image_data:
-    st.warning("Vande Bharat image not found. Place it in the project's assets folder: " f"assets/{IMAGE_NAME}")
+    st.warning(
+        "Vande Bharat image could not be loaded. Confirm that "
+        f"assets/{IMAGE_NAME} exists in the GitHub repository on the deployed branch. "
+        "Image paths are case-sensitive on Streamlit Cloud."
+    )
 
 st.radio(
     "Choose a page",
